@@ -23,14 +23,11 @@ namespace AbbyWeb.Pages.Categories
 
         public async Task<IActionResult> OnPost()
         {
-            if(Category.Name == Category.DisplayOrder.ToString())
+            var categoryFromDb = _db.Category.Find(Category.Id);
+            if(categoryFromDb != null)
             {
-                ModelState.AddModelError("Category.Name", "The Display Order cannot exactly match the Name.");
-            }
-            if (ModelState.IsValid)
-            {
-                _db.Category.Remove(Category);
-                await _db.SaveChangesAsync();
+                _db.Category.Remove(categoryFromDb);
+                await _db.SaveChangesAsync(); 
                 return RedirectToPage("Index");
             }
             return Page();
